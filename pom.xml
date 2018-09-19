@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.spring</groupId>
+	<artifactId>petclinic_parent</artifactId>
+	<packaging>pom</packaging>
+	<version>1.0-SNAPSHOT</version>
+
+	<name>petclinic_parent</name>
+	<description>The popular Spring Pet Clinic application</description>
+
+	<modules>
+		<module>petclinic</module>
+		<module>petclinic_it</module>
+	</modules>
+
+	<properties>
+		<java.version>1.8</java.version>
+
+		<servlet.version>2.5.0</servlet.version>
+		<jsp.version>2.1.0</jsp.version>
+		<jstl.version>1.2.0</jstl.version>
+		<taglibs.version>1.1.2</taglibs.version>
+		<jaxb.version>2.1.7</jaxb.version>
+		<jta.version>1.1.0</jta.version>
+		<jpa.version>1.0.0</jpa.version>
+
+		<spring.version>3.0.6.RELEASE</spring.version>
+		<aspectj.version>1.6.8.RELEASE</aspectj.version>
+		<slf4j.version>1.7.23</slf4j.version>
+		<log4j.version>2.7</log4j.version>
+		<commons-dbcp.version>1.2.2.osgi</commons-dbcp.version>
+		<commons-pool.version>1.5.3</commons-pool.version>
+		<syndication.version>1.0.0</syndication.version>
+		<jdom.version>1.1.0</jdom.version>
+
+		<hsqldb.version>1.8.0.9</hsqldb.version>
+
+		<junit.version>4.12</junit.version>
+		<easymock.version>3.4</easymock.version>
+		<selenium.version>3.9.1</selenium.version>
+		<htmlunit.version>2.29.0</htmlunit.version>
+		<pitest.version>1.2.2</pitest.version>
+
+		<jacoco.version>0.8.1</jacoco.version>
+		<jacoco.path>${settings.localRepository}/org/jacoco/org.jacoco.agent/${jacoco.version}/org.jacoco.agent-${jacoco.version}-runtime.jar</jacoco.path>
+		<jacoco.utReport>${project.build.directory}/jacoco.exec</jacoco.utReport>
+		<jacoco.itReport>${project.build.directory}/jacoco-it.exec</jacoco.itReport>
+		<jacoco.utAgentConfig>-javaagent:${jacoco.path}=destfile=${jacoco.utReport}</jacoco.utAgentConfig>
+		<jacoco.itAgentConfig>-javaagent:${jacoco.path}=destfile=${jacoco.itReport}</jacoco.itAgentConfig>
+
+		<jacoco-listeners.version>5.1.0.13090</jacoco-listeners.version>
+
+		<compiler.version>3.7.0</compiler.version>
+		<surefire.version>2.20.1</surefire.version>
+		<failsafe.version>2.20.1</failsafe.version>
+		<war.version>3.1.0</war.version>
+		<dependency.version>3.0.2</dependency.version>
+		<jmeter.version>2.2.0</jmeter.version>
+
+		<cargo.version>1.6.4</cargo.version>
+
+		<tomcat.version>8.5.27</tomcat.version>
+		<tomcat.downloadUrl>http://archive.apache.org/dist/tomcat/tomcat-8/v${tomcat.version}/bin/apache-tomcat-${tomcat.version}.zip</tomcat.downloadUrl>
+
+		<!-- overriding sonar.sources properties to enable multi-language analysis -->
+		<sonar.sources>src/main</sonar.sources>
+		<org.sonar.plugins.jmeter.jtlpath>${project.build.directory}/jmeter/results/petclinic.jtl</org.sonar.plugins.jmeter.jtlpath>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- Spring -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>org.springframework.context</artifactId>
+				<version>${spring.version}</version>
+				<exclusions>
+					<!-- Exclude Commons Logging in favor of SLF4j -->
+					<exclusion>
+						<groupId>org.apache.commons</groupId>
+						<artifactId>com.springsource.org.apache.commons.logging</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>org.springframework.orm</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>org.springframework.oxm</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>org.springframework.web.servlet</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>org.springframework.aspects</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<!-- AspectJ -->
+			<dependency>
+				<groupId>org.aspectj</groupId>
+				<artifactId>com.springsource.org.aspectj.weaver</artifactId>
+				<version>${aspectj.version}</version>
+			</dependency>
+
+			<!-- Logging -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-slf4j-impl</artifactId>
+				<version>${log4j.version}</version>
+				<scope>runtime</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-core</artifactId>
+				<version>${log4j.version}</version>
+				<scope>runtime</scope>
+			</dependency>
+			<dependency>
+				<groupId>commons-logging</groupId>
+				<artifactId>commons-logging</artifactId>
+				<version>1.2</version>
+			</dependency>
+
+			<!-- DataSource -->
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>com.springsource.org.apache.commons.dbcp</artifactId>
+				<version>${commons-dbcp.version}</version>
+				<scope>runtime</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>com.springsource.org.apache.commons.pool</artifactId>
+				<version>${commons-pool.version}</version>
+				<scope>runtime</scope>
+			</dependency>
+
+			<!-- Database drivers -->
+			<!-- HSQLDB JDBC Connector -->
+			<dependency>
+				<groupId>org.hsqldb</groupId>
+				<artifactId>com.springsource.org.hsqldb</artifactId>
+				<version>${hsqldb.version}</version>
+				<scope>runtime</scope>
+			</dependency>
+
+
+			<!-- Servlet -->
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>com.springsource.javax.servlet</artifactId>
+				<version>${servlet.version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>com.springsource.javax.servlet.jsp</artifactId>
+				<version>${jsp.version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>com.springsource.javax.servlet.jsp.jstl</artifactId>
+				<version>${jstl.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.taglibs</groupId>
+				<artifactId>com.springsource.org.apache.taglibs.standard</artifactId>
+				<version>${taglibs.version}</version>
+			</dependency>
+
+			<!-- Rome RSS -->
+			<dependency>
+				<groupId>com.sun.syndication</groupId>
+				<artifactId>com.springsource.com.sun.syndication</artifactId>
+				<version>${syndication.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jdom</groupId>
+				<artifactId>com.springsource.org.jdom</artifactId>
+				<version>${jdom.version}</version>
+				<scope>runtime</scope>
+			</dependency>
+
+			<!-- JAXB -->
+			<dependency>
+				<groupId>javax.xml.bind</groupId>
+				<artifactId>com.springsource.javax.xml.bind</artifactId>
+				<version>${jaxb.version}</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<!-- Test dependencies -->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>org.springframework.test</artifactId>
+				<version>${spring.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>javax.transaction</groupId>
+				<artifactId>com.springsource.javax.transaction</artifactId>
+				<version>${jta.version}</version>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.jacoco</groupId>
+				<artifactId>org.jacoco.agent</artifactId>
+				<version>${jacoco.version}</version>
+				<classifier>runtime</classifier>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.sonarsource.java</groupId>
+				<artifactId>sonar-jacoco-listeners</artifactId>
+				<version>${jacoco-listeners.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.seleniumhq.selenium</groupId>
+				<artifactId>selenium-java</artifactId>
+				<version>${selenium.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.seleniumhq.selenium</groupId>
+				<artifactId>htmlunit-driver</artifactId>
+				<version>${htmlunit.version}</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${compiler.version}</version>
+					<configuration>
+						<source>${java.version}</source>
+						<target>${java.version}</target>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+	<repositories>
+		<repository>
+			<id>com.springsource.repository.bundles.release</id>
+			<name>SpringSource Enterprise Bundle Repository - SpringSource
+					Releases</name>
+			<url>http://repository.springsource.com/maven/bundles/release</url>
+		</repository>
+		<repository>
+			<id>com.springsource.repository.bundles.external</id>
+			<name>SpringSource Enterprise Bundle Repository - External Releases</name>
+			<url>http://repository.springsource.com/maven/bundles/external</url>
+		</repository>
+		<repository>
+			<id>com.springsource.repository.bundles.milestone</id>
+			<name>SpringSource Enterprise Bundle Repository - SpringSource
+					Milestones</name>
+			<url>http://repository.springsource.com/maven/bundles/milestone</url>
+		</repository>
+		<repository>
+			<id>com.springsource.repository.bundles.snapshot</id>
+			<name>SpringSource Enterprise Bundle Repository - Snapshot Releases</name>
+			<url>http://repository.springsource.com/maven/bundles/snapshot</url>
+		</repository>
+	</repositories>
+</project>
