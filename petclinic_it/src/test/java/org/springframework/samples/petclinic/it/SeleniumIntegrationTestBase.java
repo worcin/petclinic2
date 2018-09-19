@@ -51,7 +51,7 @@ public class SeleniumIntegrationTestBase {
         logger.info("using Selenium hub at: " + SELENIUM_HUB_URL);
 
         TARGET_SERVER_URL = getConfigurationProperty(
-            "TARGET_SERVER_URL", "test.target.server.url", "http://localhost:58080/petclinic");
+            "TARGET_SERVER_URL", "test.target.server.url", "http://localhost:8080/petclinic");
 
         logger.info("using target server at: " + TARGET_SERVER_URL);
     }

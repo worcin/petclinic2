@@ -43,7 +43,6 @@ jobs:
       # uploads the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard. 
       - store_test_results: 
           path: petclinic/target/surefire-reports
-          path: petclinic_it/target/surefire-reports
       - persist_to_workspace:
           root: .
           paths:
@@ -57,13 +56,29 @@ jobs:
       - attach_workspace:
           at: .
       - run: ls
-      - run: docker build -t petclinic:$CIRCLE_SHA1 .
+      - run: docker build -t petclinic:${CIRCLE_SHA1} .
   integration-test:
     docker:
       # specify the version you desire here
       - image: circleci/openjdk:8-jdk
+      - image: petclinic:${CIRCLE_SHA1}
+    working_directory: ~/repo
+    environment:
+      MAVEN_OPTS: -Xmx3200m
     steps:
-      - run: echo lt
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "pom.xml" }}
+          - v1-dependencies-
+      - run: mvn dependency:go-offline
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: v1-dependencies-{{ checksum "pom.xml" }}        
+      - run: mvn integration-test -Pselenium-tests
+      - store_test_results: 
+          path: petclinic_it/target/surefire-reports
   last-test:
     docker:
       # specify the version you desire here
