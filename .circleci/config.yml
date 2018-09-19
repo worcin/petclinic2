@@ -38,8 +38,38 @@ jobs:
           key: v1-dependencies-{{ checksum "pom.xml" }}
         
       # run tests!
-      - run: mvn install
+      - run: mvn package
+      
       # uploads the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard. 
-        
       - store_test_results: 
           path: petclinic/target/surefire-reports
+          path: petclinic_it/target/surefire-reports
+  build-docker:
+      - run: echo docker
+  integration-test:
+    steps:
+      - run: echo lt
+  last-test:
+    steps:
+      - run: echo it
+  deploy:
+    steps:
+      - run: echo deploy
+workflows:
+  version: 2
+  make_ci_great_again:
+    jobs:
+      - build
+      - build-docker:
+          requires:
+            - build
+      - integration-test:
+          requires:
+            - build-docker
+      - last-test:
+          requires:
+            - build-docker
+      - deploy:
+          requires:
+            - integration-test
+            - last-test
