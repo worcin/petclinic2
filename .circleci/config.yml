@@ -45,11 +45,11 @@ jobs:
           path: petclinic/target/surefire-reports
           path: petclinic_it/target/surefire-reports
 
-      - run: mkdir /sharedworkspace
-      - run: cp Dockerfile /sharedworkspace
-      - run: cp petclinic/target/petclinic.war /sharedworkspace
+      - run: mkdir /tmp/workspace
+      - run: cp Dockerfile /tmp/workspace
+      - run: cp petclinic/target/petclinic.war /tmp/workspace
       - persist_to_workspace:
-          root: /sharedworkspace
+          root: /tmp/workspace
 
   build-docker:
     machine: true
