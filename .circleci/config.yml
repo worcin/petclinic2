@@ -55,9 +55,6 @@ jobs:
       # specify the version you desire here
       - image: circleci/openjdk:8-jdk
     steps:
-    docker:
-      # specify the version you desire here
-      - image: circleci/openjdk:8-jdk
       - run: echo lt
   last-test:
     docker:
