@@ -44,12 +44,11 @@ jobs:
       - store_test_results: 
           path: petclinic/target/surefire-reports
           path: petclinic_it/target/surefire-reports
-
-      - run: mkdir /tmp/workspace
-      - run: cp Dockerfile /tmp/workspace
-      - run: cp petclinic/target/petclinic.war /tmp/workspace
       - persist_to_workspace:
-          root: /tmp/workspace
+          root: .
+          paths:
+            - petclinic/target/petclinic.war
+            - Dockerfile
 
   build-docker:
     machine: true
