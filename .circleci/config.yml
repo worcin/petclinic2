@@ -44,12 +44,20 @@ jobs:
       - store_test_results: 
           path: petclinic/target/surefire-reports
           path: petclinic_it/target/surefire-reports
+
+      - run: mkdir /sharedworkspace
+      - run: cp Dockerfile /sharedworkspace
+      - run: cp petclinic/target/petclinic.war /sharedworkspace
+      - persist_to_workspace:
+          root: /sharedworkspace
+
   build-docker:
-    docker:
-      # specify the version you desire here
-      - image: circleci/openjdk:8-jdk
+    machine: true
     steps:
-      - run: echo docker
+      - attach_workspace:
+          at: /tmp/workspace
+      - run: cd /tmp/workspace
+      - run: docker build -t petclinic:$CIRCLE_SHA1 .
   integration-test:
     docker:
       # specify the version you desire here
