@@ -45,16 +45,33 @@ jobs:
           path: petclinic/target/surefire-reports
           path: petclinic_it/target/surefire-reports
   build-docker:
+    docker:
+      # specify the version you desire here
+      - image: circleci/openjdk:8-jdk
+    steps:
       - run: echo docker
   integration-test:
+      docker:
+      # specify the version you desire here
+      - image: circleci/openjdk:8-jdk
     steps:
+    docker:
+      # specify the version you desire here
+      - image: circleci/openjdk:8-jdk
       - run: echo lt
   last-test:
+    docker:
+      # specify the version you desire here
+      - image: circleci/openjdk:8-jdk
     steps:
       - run: echo it
   deploy:
+    docker:
+      # specify the version you desire here
+      - image: circleci/openjdk:8-jdk
     steps:
       - run: echo deploy
+
 workflows:
   version: 2
   make_ci_great_again:
