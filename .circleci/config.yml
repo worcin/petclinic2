@@ -54,8 +54,8 @@ jobs:
     machine: true
     steps:
       - attach_workspace:
-          at: /tmp/workspace
-      - run: cd /tmp/workspace
+          at: .
+      - run: ls
       - run: docker build -t petclinic:$CIRCLE_SHA1 .
   integration-test:
     docker:
