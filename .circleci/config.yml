@@ -51,7 +51,7 @@ jobs:
     steps:
       - run: echo docker
   integration-test:
-      docker:
+    docker:
       # specify the version you desire here
       - image: circleci/openjdk:8-jdk
     steps:
