@@ -51,7 +51,7 @@ jobs:
             - Dockerfile
 
   build-docker:
-    machine: true
+    machine:
       docker_layer_caching: true 
     steps:
       - attach_workspace:
