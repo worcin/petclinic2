@@ -32,7 +32,7 @@ jobs:
       - attach_workspace: # Den gemeinsamen Workspace mounten
           at: .
       - run: ls
-      - run: docker build -t petclinic:$CIRCLE_SHA1 .  #Dockerimage bauen
+      - run: docker build -t $DOCKERHUB_LOGIN/testrepo/petclinic:$CIRCLE_SHA1 .  #Dockerimage bauen
       - run: docker login -u $DOCKERHUB_LOGIN -p $DOCKERHUB_PASSWORD  #Bei Dockerhub einloggen
       - run: docker push $DOCKERHUB_LOGIN/testrepo/petclinic:$CIRCLE_SHA1  #Dockerimage hochladen
 
