@@ -1,56 +1,61 @@
 version: 2
 jobs:
-  build:
-    docker:
-      - image: circleci/openjdk:8-jdk
-    working_directory: ~/repo
-    environment:
-      MAVEN_OPTS: -Xmx3200m  
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "pom.xml" }}
-      - run: mvn dependency:go-offline
-      - save_cache:
-          paths:
-            - ~/.m2
-          key: v1-dependencies-{{ checksum "pom.xml" }}
-      - run: mvn package
-      - store_test_results: 
+ build: #Definiton des Jobs mit Namen build
+   docker:
+     - image: circleci/openjdk:8-jdk # Dockerimage in dem gearbeitet wird
+   working_directory: ~/repo
+
+   steps: #
+     - checkout # Repository auschecken
+     - restore_cache: 
+         keys:
+         - maven-dependencies-{{ checksum "pom.xml" }} # Cache wiederherstellen
+         - maven-dependencies- #Fallback, falls sich die Checksumme geändert hat
+     - run: mvn dependency:go-offline #Maven dependencies herunterladen
+     - save_cache: #Lokales Maven Repository cachen
+         paths:
+           - ~/.m2
+         key: maven-dependencies-{{ checksum "pom.xml" }}
+     - run: mvn package #Test ausführen
+     - store_test_results:  #läd die Testergebnisse hoch
           path: petclinic/target/surefire-reports
-      - persist_to_workspace:
-          root: .
-          paths:
-            - petclinic/target/petclinic.war
-            - Dockerfile
+     - persist_to_workspace:  #Persistiert die Dateien/Verzeichnisse in einem zwischen den Jobs geteilen Workspace
+         root: .
+         paths:
+           - petclinic/target/petclinic.war
+           - Dockerfile
 
   build-dockerimage:
-    machine:
+    machine: #Job wird auf einer Linuxmaschine ausgeführt
       docker_layer_caching: true 
     steps:
-      - attach_workspace:
+      - attach_workspace: # Den gemeinsamen Workspace mounten
           at: .
-      - run: docker build -t petclinic:HASH .
+      - run: ls
+      - run: docker build -t mathema/petclinic:$CIRCLE_SHA1 .  #Dockerimage bauen
+      - run: docker login -u $DOCKERHUB_LOGIN -p $DOCKERHUB_PASSWORD  #Bei Dockerhub einloggen
+      - run: docker push mathema/petclinic:$CIRCLE_SHA1  #Dockerimage hochladen
 
   integration-test:
     docker:
-      - image: circleci/openjdk:8-jdk
-      - image: petclinic:HASH
+      - image: circleci/openjdk:8-jdk #Container auf dem die Tests laufen
+      - image: mathema/petclinic:${CIRCLE_SHA1} #Container mit der Petclinic-Anwenudng
+        auth:
+          username: $DOCKERHUB_LOGIN
+          password: $DOCKERHUB_PASSWORD
     working_directory: ~/repo
-    environment:
-      MAVEN_OPTS: -Xmx3200m
+
     steps:
       - checkout
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "pom.xml" }}
-          - v1-dependencies-
+          - maven-dependencies-{{ checksum "pom.xml" }}
+          - maven-dependencies-
       - run: mvn dependency:go-offline
       - save_cache:
           paths:
             - ~/.m2
-          key: v1-dependencies-{{ checksum "pom.xml" }}        
+          key: - maven-dependencies-{{ checksum "pom.xml" }}        
       - run: mvn integration-test -Pselenium-tests
       - store_test_results: 
           path: petclinic_it/target/surefire-reports
@@ -66,3 +71,22 @@ jobs:
       - image: circleci/openjdk:8-jdk
     steps:
       - run: echo deploy
+	  
+workflows:
+  version: 2
+  make_ci_great_again:
+    jobs:
+    - build
+    - build-docker:
+        requires:
+        - build
+    - integration-test:
+        requires:
+        - build-docker
+    - last-test:
+        requires:
+        - build-docker
+    - deploy:
+        requires:
+        - integration-test
+        - last-test
