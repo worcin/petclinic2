@@ -49,7 +49,6 @@
 	<profiles>
 		<!-- add Selenium integration tests -->
 		<profile>
-					<profile>
 			<id>selenium-tests</id>
 			<build>
 				<plugins>
