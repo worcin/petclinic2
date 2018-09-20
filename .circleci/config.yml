@@ -36,7 +36,7 @@ jobs:
       - run: docker login -u $DOCKERHUB_LOGIN -p $DOCKERHUB_PASSWORD  #Bei Dockerhub einloggen
       - run: docker push mathema/petclinic:$CIRCLE_SHA1  #Dockerimage hochladen
 
-  integration-test:
+ integration-test:
     docker:
       - image: circleci/openjdk:8-jdk #Container auf dem die Tests laufen
       - image: mathema/petclinic:${CIRCLE_SHA1} #Container mit der Petclinic-Anwenudng
@@ -60,13 +60,13 @@ jobs:
       - store_test_results: 
           path: petclinic_it/target/surefire-reports
 
-  last-test:
+ last-test:
     docker:
       - image: circleci/openjdk:8-jdk
     steps:
       - run: echo it
 
-  deploy:
+ deploy:
     docker:
       - image: circleci/openjdk:8-jdk
     steps:
