@@ -77,7 +77,7 @@ workflows:
   make_ci_great_again:
     jobs:
     - build
-    - build-docker:
+    - build-dockerimage:
         requires:
         - build
     - integration-test:
