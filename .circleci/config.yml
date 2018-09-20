@@ -25,7 +25,7 @@ jobs:
            - petclinic/target/petclinic.war
            - Dockerfile
 
-  build-dockerimage:
+ build-dockerimage:
     machine: #Job wird auf einer Linuxmaschine ausgeführt
       docker_layer_caching: true 
     steps:
