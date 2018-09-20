@@ -70,7 +70,7 @@ jobs:
     docker:
       - image: circleci/openjdk:8-jdk
     steps:
-      - run: echo deploys
+      - run: echo deploy
 
 workflows:
   version: 2
@@ -82,10 +82,10 @@ workflows:
         - build
     - integration-test:
         requires:
-        - build-docker
+        - build-dockerimage
     - last-test:
         requires:
-        - build-docker
+        - build-dockerimage
     - deploy:
         requires:
         - integration-test
