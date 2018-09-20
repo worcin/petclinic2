@@ -34,7 +34,7 @@ jobs:
       - run: ls
       - run: docker build -t mathema/petclinic:$CIRCLE_SHA1 .  #Dockerimage bauen
       - run: docker login -u $DOCKERHUB_LOGIN -p $DOCKERHUB_PASSWORD  #Bei Dockerhub einloggen
-      - run: docker push mathema/petclinic:$CIRCLE_SHA1  #Dockerimage hochladen
+      - run: docker push $DOCKERHUB_LOGIN/testrepo/petclinic:$CIRCLE_SHA1  #Dockerimage hochladen
 
  integration-test:
     docker:
