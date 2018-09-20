@@ -49,26 +49,19 @@
 	<profiles>
 		<!-- add Selenium integration tests -->
 		<profile>
+					<profile>
 			<id>selenium-tests</id>
 			<build>
 				<plugins>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-failsafe-plugin</artifactId>
-						<version>${failsafe.version}</version>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<version>${surefire.version}</version>
 						<configuration>
 							<includes>
 								<include>**/*IT.java</include>
 							</includes>
 						</configuration>
-						<executions>
-							<execution>
-								<goals>
-									<goal>integration-test</goal>
-									<goal>verify</goal>
-								</goals>
-							</execution>
-						</executions>
 					</plugin>
 				</plugins>
 			</build>
