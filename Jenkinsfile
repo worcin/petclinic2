@@ -18,7 +18,7 @@ pipeline {
     stage('EndToEnd') {
       steps {
         sh '''docker run -d --name dockertest -p 58080:8080 tomcat:petclinic
-		mvn verify -Pselenium-tests'''
+		mvn clean verify -Pselenium-tests -Dselenium.port=58080'''
       }
       post {
         success {
@@ -47,16 +47,10 @@ pipeline {
     }
     stage('deploy') {
       steps {
-        script {
-          try{
-            sh '''docker stop prodclinic'''
-            echo('Docker stopped')
-            sh '''docker rm prodclinic'''
-            echo('Docker removed')
-          }catch(e) {}
-          sh '''docker run -d --name prodclinic -p 48080:8080 tomcat:petclinic'''
+            //sh '''docker stop prodclinic
+            //docker rm prodclinic
+			//docker run -d --name prodclinic -p 48080:8080 tomcat:petclinic'''
         }
       }
     }
-  }
 }
