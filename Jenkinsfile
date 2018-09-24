@@ -47,9 +47,7 @@ pipeline {
     }
     stage('deploy') {
       steps {
-            //sh '''docker stop prodclinic
-            //docker rm prodclinic
-			//docker run -d --name prodclinic -p 48080:8080 tomcat:petclinic'''
+            
         }
       }
     }
