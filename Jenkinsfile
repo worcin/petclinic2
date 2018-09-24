@@ -45,7 +45,7 @@ pipeline {
         }
       }
     }
- stage('LastTest') {
+   stage('Deploy') {
       steps {
         sh '''echo deploy'''
       }
