@@ -14,7 +14,7 @@ pipeline {
 docker build -t tomcat:petclinic .'''
       }
     }
-    stage('EndToEnd') {
+    stage('IntegrationTesting') {
       parallel {
         stage('EndToEnd') {
           post {
@@ -35,31 +35,25 @@ docker build -t tomcat:petclinic .'''
 mvn clean verify -Pselenium-tests -Dselenium.port=58080'''
           }
         }
-        stage('Lt') {
+        stage('LastTest') {
+          post {
+            success {
+              junit '**/target/surefire-reports/**/*.xml'
+
+            }
+
+            always {
+              sh '''docker stop dockertest
+			docker rm dockertest'''
+
+            }
+
+          }
           steps {
             sh '''docker run -d --name dockertest -p 58080:8080 tomcat:petclinic
 mvn clean verify -Pjmeter-tests'''
           }
         }
-      }
-    }
-    stage('LastTest') {
-      post {
-        success {
-          junit '**/target/surefire-reports/**/*.xml'
-
-        }
-
-        always {
-          sh '''docker stop dockertest
-			docker rm dockertest'''
-
-        }
-
-      }
-      steps {
-        sh '''docker run -d --name dockertest -p 58080:8080 tomcat:petclinic
-		mvn clean verify -Pjmeter-tests'''
       }
     }
     stage('Deploy') {
