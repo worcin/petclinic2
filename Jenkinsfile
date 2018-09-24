@@ -31,8 +31,8 @@ docker build -t tomcat:petclinic .'''
 
           }
           steps {
-            sh '''docker run -d --name dockerEnd2End -p 58080:8080 tomcat:petclinic
-mvn clean verify -Pselenium-tests -Dselenium.port=58080'''
+            sh '''docker run -d --name dockerEnd2End -p 48080:8080 tomcat:petclinic
+mvn clean verify -Pselenium-tests -Dselenium.port=48080'''
           }
         }
         stage('LastTest') {
