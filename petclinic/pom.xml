@@ -153,15 +153,6 @@
 					<!-- <argLine>-XX:-UseSplitVerifier ${jacoco.utAgentConfig}</argLine> -->
 					<!-- JDK 8 - bytecode verifier cannot be relaxed or disabled -->
 					<!-- to prevent runtime errors, OpenJPA tests are ignored -->
-					<argLine>${jacoco.utAgentConfig}</argLine>
-					<properties>
-						<!-- add SonarQube's JaCoCo listener to enable -->
-						<!-- gathering of code coverage metrics per test -->
-						<property>
-							<name>listener</name>
-							<value>org.sonar.java.jacoco.JUnitListener</value>
-						</property>
-					</properties>
 					<forkCount>0</forkCount>
 				</configuration>
 			</plugin>
