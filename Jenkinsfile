@@ -46,9 +46,8 @@ pipeline {
       }
     }
     stage('deploy') {
-      steps {
-            
-        }
+  steps {
+        sh '''echo deploy'''
       }
     }
 }
