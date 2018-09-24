@@ -24,14 +24,14 @@ docker build -t tomcat:petclinic .'''
             }
 
             always {
-              sh '''docker stop dockertest
-			docker rm dockertest'''
+              sh '''docker stop dockerEnd2End
+			docker rm dockerEnd2End'''
 
             }
 
           }
           steps {
-            sh '''docker run -d --name dockertest -p 58080:8080 tomcat:petclinic
+            sh '''docker run -d --name dockerEnd2End -p 58080:8080 tomcat:petclinic
 mvn clean verify -Pselenium-tests -Dselenium.port=58080'''
           }
         }
@@ -43,14 +43,14 @@ mvn clean verify -Pselenium-tests -Dselenium.port=58080'''
             }
 
             always {
-              sh '''docker stop dockertest
-			docker rm dockertest'''
+              sh '''docker stop dockerLT
+			docker rm dockerLT'''
 
             }
 
           }
           steps {
-            sh '''docker run -d --name dockertest -p 58080:8080 tomcat:petclinic
+            sh '''docker run -d --name dockerLT -p 58080:8080 tomcat:petclinic
 mvn clean verify -Pjmeter-tests'''
           }
         }
