@@ -162,6 +162,7 @@
 							<value>org.sonar.java.jacoco.JUnitListener</value>
 						</property>
 					</properties>
+					<forkCount>0</forkCount>
 				</configuration>
 			</plugin>
 			<plugin>
