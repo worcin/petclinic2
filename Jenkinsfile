@@ -26,40 +26,38 @@ pipeline {
       }
     }
   }
-  stages {
-    stage('BuildDocker') {
-      steps {
-        unstash name: "warfile"
-        sh "docker build -t $DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER ."
-        sh "docker push $DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER"
-      }
+  stage('BuildDocker') {
+    steps {
+      unstash name: "warfile"
+      sh "docker build -t $DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER ."
+      sh "docker push $DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER"
     }
-    stage('IntegrationTesting') {
-      parallel {
-        stage('EndToEnd') {
-          steps {
-              sh "docker run -d --name dockerEnd2End -p 48080:8080 $DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER"
-              sh "mvn verify -Pselenium-tests -Dselenium.port=48080 -pl petclinic_it"
-          }
-          post {
-            always {
-              junit '**/target/surefire-reports/**/*.xml'
-              sh "docker stop dockerEnd2End"
-              sh "docker rm dockerEnd2End"
-            }
+  }
+  stage('IntegrationTesting') {
+    parallel {
+      stage('EndToEnd') {
+        steps {
+            sh "docker run -d --name dockerEnd2End -p 48080:8080 $DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER"
+            sh "mvn verify -Pselenium-tests -Dselenium.port=48080 -pl petclinic_it"
+        }
+        post {
+          always {
+            junit '**/target/surefire-reports/**/*.xml'
+            sh "docker stop dockerEnd2End"
+            sh "docker rm dockerEnd2End"
           }
         }
-        stage('LastTest') {
-          steps {
-              sh "docker run -d --name dockerLT -p 58080:8080 $DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER"
-              sh "mvn verify -Pjmeter-tests -pl petclinic_it"
-          }
-          post {
-            always {
-              junit '**/target/surefire-reports/**/*.xml'
-              sh "docker stop dockerLT"
-              sh "docker rm dockerLT"
-            }
+      }
+      stage('LastTest') {
+        steps {
+            sh "docker run -d --name dockerLT -p 58080:8080 $DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER"
+            sh "mvn verify -Pjmeter-tests -pl petclinic_it"
+        }
+        post {
+          always {
+            junit '**/target/surefire-reports/**/*.xml'
+            sh "docker stop dockerLT"
+            sh "docker rm dockerLT"
           }
         }
       }
