@@ -31,7 +31,6 @@ jobs:
     steps:
       - attach_workspace: # Den gemeinsamen Workspace mounten
           at: .
-      - run: ls
       - run: docker build -t $DOCKERHUB_LOGIN/petclinic:$CIRCLE_SHA1 .  #Dockerimage bauen
       - run: docker login -u $DOCKERHUB_LOGIN -p $DOCKERHUB_PASSWORD  #Bei Dockerhub einloggen
       - run: docker push $DOCKERHUB_LOGIN/petclinic:$CIRCLE_SHA1  #Dockerimage hochladen
@@ -56,7 +55,7 @@ jobs:
           paths:
             - ~/.m2
           key: maven-dependencies-{{ checksum "pom.xml" }}        
-      - run: mvn integration-test -Pselenium-tests
+      - run: mvn integration-test -Pselenium-tests -pl petclinic_it
       - store_test_results: 
           path: petclinic_it/target/surefire-reports
 
