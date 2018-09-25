@@ -9,6 +9,9 @@ pipeline {
   }
   stages {
     stage('Build') {
+      agent {
+        docker { image 'maven:3.5-jdk-8' }
+      }
       steps {
         sh "mvn clean install"
         stash name: "warfile", includes: "petclinic/target/petclinic.war"
@@ -19,6 +22,7 @@ pipeline {
         }
       }
     }
+  }
   stages {
     stage('BuildDocker') {
       steps {
