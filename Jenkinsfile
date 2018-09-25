@@ -7,6 +7,9 @@ pipeline {
   triggers {
     pollSCM('H/1 * * * *')
   }
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '5')) 
+  }
   stages {
     stage('Build') {
       agent {
