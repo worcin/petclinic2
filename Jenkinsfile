@@ -28,15 +28,16 @@ pipeline {
     stage('BuildDocker') {
       steps {
         unstash name: "warfile"
-        sh "docker build -t $DOCKERHUB_LOGIN/petclinic:jenkins$BUILD_NUMBER ."
-        sh "docker push $DOCKERHUB_LOGIN/petclinic:jenkins$BUILD_NUMBER"
+        sh "docker build -t $DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER ."
+	sh "docker login -u $DOCKERHUB_LOGIN -p $DOCKERHUB_PASS"
+        sh "docker push $DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER"
       }
     }
     stage('IntegrationTesting') {
       parallel {
         stage('EndToEnd') {
           steps {
-              sh "docker run -d --name dockerEnd2End -p 48080:8080 $DOCKERHUB_LOGIN/petclinic:jenkins$BUILD_NUMBER"
+              sh "docker run -d --name dockerEnd2End -p 48080:8080 $DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER"
               sh "mvn verify -Pselenium-tests -Dselenium.port=48080 -pl petclinic_it"
           }
           post {
@@ -49,7 +50,7 @@ pipeline {
         }
         stage('LastTest') {
           steps {
-              sh "docker run -d --name dockerLT -p 58080:8080 $DOCKERHUB_LOGIN/petclinic:jenkins$BUILD_NUMBER"
+              sh "docker run -d --name dockerLT -p 58080:8080 $DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER"
               sh "mvn verify -Pjmeter-tests -pl petclinic_it"
           }
           post {
