@@ -61,11 +61,11 @@ pipeline {
           }
         }
       }
-      stage('Deploy') {
-        steps {
-          sh "echo deploy"
-        }
+	}
+    stage('Deploy') {
+      steps {
+        sh "echo deploy"
       }
-    }
+    } 
   }
 }
