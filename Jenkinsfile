@@ -1,68 +1,54 @@
 pipeline {
+  triggers {
+    pollSCM('H/1 * * * *')
+  }
   agent any
   stages {
     stage('Build') {
-      post {
-        success {
-          junit '**/target/surefire-reports/**/*.xml'
-
-        }
-
-      }
       steps {
-        sh '''mvn clean install
-docker build -t tomcat:petclinic .'''
+        sh "mvn clean install"
+	sh "docker build -t tomcat:petclinic ."
+      }
+      post {
+        always {
+          junit '**/target/surefire-reports/**/*.xml'
+        }
       }
     }
     stage('IntegrationTesting') {
       parallel {
         stage('EndToEnd') {
-          post {
-            success {
-              junit '**/target/surefire-reports/**/*.xml'
-
-            }
-
-            always {
-              sh '''docker stop dockerEnd2End
-			docker rm dockerEnd2End'''
-
-            }
-
-          }
           steps {
-            sh '''docker run -d --name dockerEnd2End -p 48080:8080 tomcat:petclinic
-mvn verify -Pselenium-tests -Dselenium.port=48080 -pl petclinic_it'''
+              sh "docker run -d --name dockerEnd2End -p 48080:8080 tomcat:petclinic"
+              sh "mvn verify -Pselenium-tests -Dselenium.port=48080 -pl petclinic_it"
+          }
+          post {
+            always {
+              junit '**/target/surefire-reports/**/*.xml'
+              sh "docker stop dockerEnd2End"
+              sh "docker rm dockerEnd2End"
+            }
           }
         }
         stage('LastTest') {
-          post {
-            success {
-              junit '**/target/surefire-reports/**/*.xml'
-
-            }
-
-            always {
-              sh '''docker stop dockerLT
-			docker rm dockerLT'''
-
-            }
-
-          }
           steps {
-            sh '''docker run -d --name dockerLT -p 58080:8080 tomcat:petclinic
-mvn verify -Pjmeter-tests -pl petclinic_it'''
+              sh "docker run -d --name dockerLT -p 58080:8080 tomcat:petclinic"
+              sh "mvn verify -Pjmeter-tests -pl petclinic_it"
+          }
+          post {
+            always {
+              junit '**/target/surefire-reports/**/*.xml'
+              sh "docker stop dockerLT"
+              sh "docker rm dockerLT"
+            }
           }
         }
       }
     }
     stage('Deploy') {
       steps {
-        sh 'echo deploy'
+        sh "echo deploy"
       }
     }
-  }
-  triggers {
-    pollSCM('H/1 * * * *')
   }
 }
