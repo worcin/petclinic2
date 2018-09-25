@@ -7,12 +7,19 @@ pipeline {
     stage('Build') {
       steps {
         sh "mvn clean install"
-	sh "docker build -t tomcat:petclinic ."
+        stash name: "warfile", includes: "petclinic/target/petclinic.war"
       }
       post {
         always {
           junit '**/target/surefire-reports/**/*.xml'
         }
+      }
+    }
+  stages {
+    stage('BuildDocker') {
+      steps {
+        unstash name: "warfile"
+        sh "docker build -t tomcat:petclinic ."
       }
     }
     stage('IntegrationTesting') {
