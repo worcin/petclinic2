@@ -1,8 +1,12 @@
 pipeline {
+  agent any
+  environment {
+    DOCKERHUB_LOGIN = credentials('jenkins-docker-login')
+    DOCKERHUB_PASSWORD = credentials('jenkins-docker-password')
+  }
   triggers {
     pollSCM('H/1 * * * *')
   }
-  agent any
   stages {
     stage('Build') {
       steps {
@@ -19,14 +23,15 @@ pipeline {
     stage('BuildDocker') {
       steps {
         unstash name: "warfile"
-        sh "docker build -t tomcat:petclinic ."
+        sh "docker build -t $DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER ."
+        sh "docker push $DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER"
       }
     }
     stage('IntegrationTesting') {
       parallel {
         stage('EndToEnd') {
           steps {
-              sh "docker run -d --name dockerEnd2End -p 48080:8080 tomcat:petclinic"
+              sh "docker run -d --name dockerEnd2End -p 48080:8080 $DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER"
               sh "mvn verify -Pselenium-tests -Dselenium.port=48080 -pl petclinic_it"
           }
           post {
@@ -39,7 +44,7 @@ pipeline {
         }
         stage('LastTest') {
           steps {
-              sh "docker run -d --name dockerLT -p 58080:8080 tomcat:petclinic"
+              sh "docker run -d --name dockerLT -p 58080:8080 $DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER"
               sh "mvn verify -Pjmeter-tests -pl petclinic_it"
           }
           post {
