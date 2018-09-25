@@ -12,7 +12,7 @@ pipeline {
       agent {
         docker { 
           image 'maven:3.5-jdk-8' 
-          args '-v $HOME/.m2":/maven/.m2'
+          args '-v $HOME/.m2:/root/.m2'
         }
       }
       steps {
@@ -29,24 +29,22 @@ pipeline {
       steps {
         unstash name: "warfile"
         sh "docker build -t $DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER ."
-        sh "docker login -u $DOCKERHUB_LOGIN -p $DOCKERHUB_PASSWORD"
+	sh "docker login -u $DOCKERHUB_LOGIN -p $DOCKERHUB_PASS"
         sh "docker push $DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER"
       }
     }
     stage('IntegrationTesting') {
       parallel {
         stage('EndToEnd') {
-           steps {
-	     script {
-		docker.image('$DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER').withRun('-p 48080:8080')
-                docker.image('maven:3.5-jdk-8'){ c->   
-                  sh "mvn verify -Pselenium-tests -Dselenium.port=48080 -pl petclinic_it"
-                }
-	     }
-	  }
+          steps {
+              sh "docker run -d --name dockerEnd2End -p 48080:8080 $DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER"
+              sh "mvn verify -Pselenium-tests -Dselenium.port=48080 -pl petclinic_it"
+          }
           post {
             always {
               junit '**/target/surefire-reports/**/*.xml'
+              sh "docker stop dockerEnd2End"
+              sh "docker rm dockerEnd2End"
             }
           }
         }
