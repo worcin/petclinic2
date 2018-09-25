@@ -36,12 +36,14 @@ pipeline {
     stage('IntegrationTesting') {
       parallel {
         stage('EndToEnd') {
-		script {
-		   docker.image('$DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER').withRun('-p 48080:8080')
-                     docker.image('maven:3.5-jdk-8'){ c->   
-                       sh "mvn verify -Pselenium-tests -Dselenium.port=48080 -pl petclinic_it"
-                   }
-		}
+           steps {
+	     script {
+		docker.image('$DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER').withRun('-p 48080:8080')
+                docker.image('maven:3.5-jdk-8'){ c->   
+                  sh "mvn verify -Pselenium-tests -Dselenium.port=48080 -pl petclinic_it"
+                }
+	     }
+	  }
           post {
             always {
               junit '**/target/surefire-reports/**/*.xml'
