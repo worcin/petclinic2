@@ -43,7 +43,9 @@ pipeline {
               docker.image("$DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER").withRun { container ->
                 docker.image("maven:3.5-jdk-8").inside("--link=${container.id}:selenium -P"){
                   sh "mvn verify -Pselenium-tests -Dselenium.host=selenium:8080 -pl petclinic_it"
+                  sh "cat /etc/hosts"
                 }
+                sh "cat /etc/hosts"
               }
             }
           }
