@@ -41,7 +41,7 @@ pipeline {
           steps {
             script{
               docker.image("$DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER").withRun { container ->
-                docker.image("maven:3.5-jdk-8").inside("--link=${container.id}:selenium -P"){
+                docker.image("maven:3.5-jdk-8").inside("--link=${container.id}:selenium -P -v /maven/.m2:/root/.m2"){
                   sh 'mvn verify -Pselenium-tests -Dselenium.host=selenium -pl petclinic_it'
                 }
               }
@@ -60,6 +60,7 @@ pipeline {
           }
           post {
             always {
+              archiveArtifacts '**/target/surefire-reports/**/*.jmx'
               sh "docker stop dockerLT"
               sh "docker rm dockerLT"
             }
