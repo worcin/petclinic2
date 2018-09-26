@@ -55,7 +55,6 @@ pipeline {
           }
           post {
             always {
-              junit '**/target/surefire-reports/**/*.xml'
               sh "docker stop dockerLT"
               sh "docker rm dockerLT"
             }
