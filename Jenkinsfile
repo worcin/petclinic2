@@ -60,7 +60,7 @@ pipeline {
           }
           post {
             always {
-              archiveArtifacts '**/target/testFiles/**/*.jmx'
+              archiveArtifacts '**/target/jmeter/testFiles/**/*.jmx'
               sh "docker stop dockerLT"
               sh "docker rm dockerLT"
             }
