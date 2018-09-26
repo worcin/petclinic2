@@ -50,8 +50,6 @@ pipeline {
           post {
             always {
               junit '**/target/surefire-reports/**/*.xml'
-              sh "docker stop dockerEnd2End"
-              sh "docker rm dockerEnd2End"
             }
           }
         }
