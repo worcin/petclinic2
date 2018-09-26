@@ -40,7 +40,7 @@ pipeline {
         stage('EndToEnd') {
           steps {
             script{
-              docker.image("$DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER").withRun('-p 58080:8080') { container ->
+              docker.image("$DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER").withRun('-p 48080:8080') { container ->
                 docker.image("maven:3.5-jdk-8").inside("--link=${container.id}:localhost"){
                   sh "mvn verify -Pjmeter-tests -pl petclinic_it"
                 }
