@@ -14,12 +14,12 @@ pipeline {
     stage('Build') {
       agent {
         docker { 
-          image 'maven:3.5-jdk-8' 
-          args '-v /opt/myvolumes/m2:/root/.m2'
+            image 'maven:3-alpine' 
+            args '-v /root/.m2:/root/.m2' 
         }
       }
       steps {
-        withMaven(mavenLocalRepo: "/maven/.m2"){sh "mvn clean install"}
+        sh "mvn -B clean install"
         stash name: "warfile", includes: "petclinic/target/petclinic.war"
       }
       post {
