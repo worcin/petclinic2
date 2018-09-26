@@ -60,7 +60,7 @@ pipeline {
           }
           post {
             always {
-              archiveArtifacts '**/target/surefire-reports/**/*.jmx'
+              archiveArtifacts '**/target/testFiles/**/*.jmx'
               sh "docker stop dockerLT"
               sh "docker rm dockerLT"
             }
