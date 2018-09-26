@@ -19,7 +19,7 @@ pipeline {
         }
       }
       steps {
-        sh "mvn clean install"
+        withMaven(mavenLocalRepo: "/maven/.m2"){sh "mvn clean install"}
         stash name: "warfile", includes: "petclinic/target/petclinic.war"
       }
       post {
