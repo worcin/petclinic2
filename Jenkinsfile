@@ -42,12 +42,19 @@ pipeline {
             script{
               docker.image("$DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER").withRun { container ->
                 docker.image("maven:3.5-jdk-8").inside("--link=${container.id}:selenium -P"){
-                  sh "curl http://selenium:8080"
                   sh 'mvn verify -Pselenium-tests -Dselenium.host=selenium -pl petclinic_it'
                 }
               }
             }
           }
+          post {
+            always {
+              junit '**/target/surefire-reports/**/*.xml'
+              sh "docker stop dockerEnd2End"
+              sh "docker rm dockerEnd2End"
+            }
+          }
+        }
         }
         stage('LastTest') {
           steps {
