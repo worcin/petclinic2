@@ -14,8 +14,8 @@ pipeline {
     stage('Build') {
       agent {
         docker { 
-            image 'maven:3-alpine' 
-            args '-v /root/.m2:/root/.m2' 
+            image 'maven:3.5-jdk-8' 
+            args '-v /maven/.m2:/root/.m2' 
         }
       }
       steps {
@@ -41,7 +41,7 @@ pipeline {
           steps {
             script{
               docker.image("$DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER").withRun { container ->
-                docker.image("maven:3.5-jdk-8").inside("--link=${container.id}:selenium -P -v /opt/myvolumes/m2:/root/.m2"){
+                docker.image("maven:3.5-jdk-8").inside("--link=${container.id}:selenium -P -v /maven/.m2:/root/.m2"){
                   sh 'mvn verify -Pselenium-tests -Dselenium.host=selenium -pl petclinic_it'
                 }
               }
