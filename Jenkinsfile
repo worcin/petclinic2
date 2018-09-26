@@ -61,7 +61,7 @@ pipeline {
           }
         }
       }
-	}
+    }
     stage('Deploy') {
       steps {
         sh "echo deploy"
