@@ -42,11 +42,12 @@ pipeline {
             script{
               docker.image("$DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER").withRun('-d -p 58080:8080') { container ->
                 docker.image("maven:3.5-jdk-8").inside("--link=${container.id}:localhost"){
-                 sh "mvn verify -Pjmeter-tests -pl petclinic_it"
-               }
-             }
+                  sh "mvn verify -Pjmeter-tests -pl petclinic_it"
+                }
+              }
+            }
           }
-	}
+        }
         stage('LastTest') {
           steps {
               sh "docker run -d --name dockerLT -p 58080:8080 $DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER"
