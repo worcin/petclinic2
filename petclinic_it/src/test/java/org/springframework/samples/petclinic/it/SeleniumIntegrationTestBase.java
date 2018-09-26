@@ -50,9 +50,9 @@ public class SeleniumIntegrationTestBase {
 
         logger.info("using Selenium hub at: " + SELENIUM_HUB_URL);
 		
-		String seleniumPort = System.getProperty("selenium.port","8080");
+		String seleniumPort = System.getProperty("selenium.host","localhost:8080");
         TARGET_SERVER_URL = getConfigurationProperty(
-            "TARGET_SERVER_URL", "test.target.server.url", "http://localhost:" + seleniumPort + "/petclinic");
+            "TARGET_SERVER_URL", "test.target.server.url", "http://" + seleniumPort + "/petclinic");
 
         logger.info("using target server at: " + TARGET_SERVER_URL);
     }
