@@ -55,7 +55,6 @@ pipeline {
             }
           }
         }
-        }
         stage('LastTest') {
           steps {
               sh "docker run -d --name dockerLT -p 58080:8080 $DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER"
