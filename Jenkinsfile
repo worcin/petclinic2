@@ -42,7 +42,7 @@ pipeline {
             script{
               docker.image("$DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER").withRun('-p 48080:8080') { container ->
                 docker.image("maven:3.5-jdk-8").inside("--link=${container.id}:localhost"){
-                  sh "mvn verify -Pjmeter-tests -pl petclinic_it"
+                  sh "mvn verify -Pselenium-tests -Dselenium.port=48080 -pl petclinic_it"
                 }
               }
             }
