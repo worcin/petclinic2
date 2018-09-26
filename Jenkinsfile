@@ -39,17 +39,14 @@ pipeline {
       parallel {
         stage('EndToEnd') {
           steps {
-              sh "docker run -d --name dockerEnd2End -p 48080:8080 $DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER"
-              sh "mvn verify -Pselenium-tests -Dselenium.port=48080 -pl petclinic_it"
+            script{
+              docker.image("$DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER").withRun('-d -p 58080:8080') { container ->
+                docker.image("maven:3.5-jdk-8").inside("--link=${container.id}:localhost"){
+                 sh "mvn verify -Pjmeter-tests -pl petclinic_it"
+               }
+             }
           }
-          post {
-            always {
-              junit '**/target/surefire-reports/**/*.xml'
-              sh "docker stop dockerEnd2End"
-              sh "docker rm dockerEnd2End"
-            }
-          }
-        }
+	}
         stage('LastTest') {
           steps {
               sh "docker run -d --name dockerLT -p 58080:8080 $DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER"
