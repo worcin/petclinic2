@@ -85,7 +85,4 @@ workflows:
     - last-test:
         requires:
         - build-dockerimage
-    - deploy:
-        requires:
-        - integration-test
-        - last-test
+
