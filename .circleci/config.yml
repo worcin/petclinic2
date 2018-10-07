@@ -58,7 +58,6 @@ jobs:
       - run: mvn integration-test -Pselenium-tests -pl petclinic_it
       - store_test_results: 
           path: petclinic_it/target/surefire-reports
-
  last-test:
     docker:
       - image: circleci/openjdk:8-jdk
@@ -70,7 +69,11 @@ jobs:
       - image: circleci/openjdk:8-jdk
     steps:
       - run: echo deploy
-
+  deploy:
+    docker:
+    - image: circleci/openjdk:8-jdk
+    steps:
+    - run: echo deploy
 workflows:
   version: 2
   make_ci_great_again:
@@ -85,4 +88,8 @@ workflows:
     - last-test:
         requires:
         - build-dockerimage
+    - deploy:
+        requires:
+        - integration-test
+        - last-test
 
