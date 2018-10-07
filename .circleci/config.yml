@@ -63,17 +63,11 @@ jobs:
       - image: circleci/openjdk:8-jdk
     steps:
       - run: echo it
-
  deploy:
     docker:
       - image: circleci/openjdk:8-jdk
     steps:
       - run: echo deploy
-  deploy:
-    docker:
-    - image: circleci/openjdk:8-jdk
-    steps:
-    - run: echo deploy
 workflows:
   version: 2
   make_ci_great_again:
