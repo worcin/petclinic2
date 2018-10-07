@@ -31,6 +31,7 @@ pipeline {
     stage('BuildDocker') {
       steps {
         unstash name: "warfile"
+        sh 'docker login -u $DOCKERHUB_LOGIN -p $DOCKERHUB_PASSWORD'
         sh 'docker build -t $DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER .'
         sh 'docker push $DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER'
       }
