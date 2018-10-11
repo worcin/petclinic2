@@ -5,7 +5,7 @@ pipeline {
     DOCKERHUB_PASSWORD = credentials('jenkins-docker-password')
   }
   triggers {
-    pollSCM('H/1 * * * *')
+    upstream(upstreamProjects: 'Upstream', threshold: hudson.model.Result.SUCCESS) }
   }
   options {
     buildDiscarder(logRotator(numToKeepStr: '5')) 
