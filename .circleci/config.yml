@@ -37,7 +37,7 @@ jobs:
 
  integration-test:
     docker:
-      - image: circleci/openjdk:8-jdk #Container auf dem die Tests laufen
+      - image: maven:3.5-jdk-8 #Container auf dem die Tests laufen
       - image: $DOCKERHUB_LOGIN/petclinic:$CIRCLE_SHA1 #Container mit der Petclinic-Anwenudng
         auth:
           username: $DOCKERHUB_LOGIN
