@@ -54,7 +54,7 @@
 		<jacoco-listeners.version>5.1.0.13090</jacoco-listeners.version>
 
 		<compiler.version>3.7.0</compiler.version>
-		<surefire.version>2.20.1</surefire.version>
+		<surefire.version>2.22.1</surefire.version>
 		<failsafe.version>2.20.1</failsafe.version>
 		<war.version>3.1.0</war.version>
 		<dependency.version>3.0.2</dependency.version>
