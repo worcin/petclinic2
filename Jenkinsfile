@@ -1,22 +1,22 @@
 pipeline {
-  agent none #Keinen default Agent
+  agent none //Keinen Standard-Agent
   triggers {
-    pollSCM('* * * * *') #Jede Minute nachfragen, ob es Änderungen gab
+    pollSCM('* * * * *') //Jede Minute auf Änderungen prüfen
   }
-  stages { #Definition der Stages
-    stage('Build') { #Stage mit namen Build
-      agent { #Wird in einem Dockercontainer mit Maven gebaut
+  stages { //Definition der Build-Schritte
+    stage('Build') { //Stage mit namen Build
+      agent { //In einem Dockercontainer mit Maven bauen
         docker { 
             image 'maven:3.5-jdk-8'
         }
       }
       steps {
-        sh "mvn -B clean package"  #Bauen und Tests ausführen
-        stash name: "warfile", includes: "petclinic/target/petclinic.war" #War für spätere Aktivitäten stashen
+        sh 'mvn -B clean package' //Bauen und Tests ausführen
+        stash name: "warfile", includes: "petclinic/target/petclinic.war" //.war für spätere Aktivitäten stashen
       }
       post {
         always {
-          junit '**/target/surefire-reports/**/*.xml'   #Testergebnisse sichern
+          junit '**/target/surefire-reports/**/*.xml' //Testergebnisse sichern
         }
       }
     }
