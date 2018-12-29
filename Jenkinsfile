@@ -25,6 +25,7 @@ pipeline {
       }
     }
     stage('BuildDocker') {
+      agent any
       steps {
         unstash name: "warfile"
         sh 'docker login -u $DOCKERHUB_LOGIN -p $DOCKERHUB_PASSWORD'
