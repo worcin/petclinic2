@@ -4,12 +4,6 @@ pipeline {
     DOCKERHUB_LOGIN = credentials('jenkins-docker-login')
     DOCKERHUB_PASSWORD = credentials('jenkins-docker-password')
   }
-  triggers {
-    upstream(upstreamProjects: 'Upstream', threshold: hudson.model.Result.SUCCESS)
-  }
-  options {
-    buildDiscarder(logRotator(numToKeepStr: '5')) 
-  }
   stages {
     stage('Build') {
       agent {
