@@ -11,7 +11,7 @@ pipeline {
         }
       }
       steps {
-        sh "mvn -B clean install"
+        sh "mvn -B clean package"
         stash name: "warfile", includes: "petclinic/target/petclinic.war"
       }
       post {
