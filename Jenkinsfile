@@ -1,9 +1,5 @@
 pipeline {
   agent any
-  environment {
-    DOCKERHUB_LOGIN = credentials('jenkins-docker-login')
-    DOCKERHUB_PASSWORD = credentials('jenkins-docker-password')
-  }
   stages {
     stage('Build') {
       agent {
