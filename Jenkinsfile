@@ -34,11 +34,13 @@ pipeline {
       }
     }
     stage('EndToEnd') {
+      agent any
       steps {
         script {
-          docker.image("$DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER").withRun { container ->
-            docker.image("maven:3.5-jdk-8").inside("--link=${container.id}:selenium"){
-              sh 'mvn verify -Pselenium-tests -Dselenium.host=selenium -pl petclinic_it'
+          docker.image("$DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER").withRun { 
+            container ->
+              docker.image("maven:3.5-jdk-8").inside("--link=${container.id}:selenium") {
+                sh 'mvn verify -Pselenium-tests -Dselenium.host=selenium -pl petclinic_it'
             }
           }
         }
