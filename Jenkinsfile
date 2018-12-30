@@ -40,7 +40,7 @@ pipeline {
           docker.image("$DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER").withRun { 
             container ->
               docker.image("maven:3.5-jdk-8").inside("--link=${container.id}:selenium") {
-                sh 'mvn verify -Pselenium-tests -Dselenium.host=selenium -pl petclinic_it'
+                sh 'mvn verify -Pselenium-tests -Dselenium.host=selenium'
             }
           }
         }
@@ -58,7 +58,7 @@ pipeline {
           docker.image("$DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER").withRun { 
             container ->
               docker.image("maven:3.5-jdk-8").inside("--link=${container.id}:selenium") {
-                sh 'mvn verify -Pselenium-tests -Dselenium.host=selenium -pl petclinic_it'
+                sh 'mvn verify -Plast-tests -Dselenium.host=selenium'
             }
           }
         }
