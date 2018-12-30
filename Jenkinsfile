@@ -57,8 +57,8 @@ pipeline {
         script {
           docker.image("$DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER").withRun { 
             container ->
-              docker.image("maven:3.5-jdk-8").inside("--link=${container.id}:selenium") {
-                sh 'mvn verify -Plast-tests -Dselenium.host=selenium'
+              docker.image("maven:3.5-jdk-8").inside("--link=${container.id}:lasttest") {
+                sh 'mvn verify -Plast-tests'
             }
           }
         }
