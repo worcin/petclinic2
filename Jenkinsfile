@@ -70,8 +70,10 @@ pipeline {
       }
     }
     stage('Deploy') {
-      steps {
-        sh 'echo hello'
+      steps { 
+        sshagent (credentials: ['petclinic-production']) {
+          sh 'ssh pi@192.168.178.34 echo hello'
+        }
       }
     }
   }
