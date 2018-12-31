@@ -15,7 +15,7 @@ pipeline {
         }
       }
       steps {
-        sh 'mvn -B clean package' //Bauen und Tests ausführen
+        sh 'mvn clean package' //Bauen und Tests ausführen
         stash name: "warfile", includes: "petclinic/target/petclinic.war" //petclinic.war für spätere Aktivitäten stashen
       }
       post {
