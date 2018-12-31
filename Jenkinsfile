@@ -71,7 +71,7 @@ pipeline {
     }
     stage('Deploy') {
       steps { 
-        sshUserPrivateKey (credentialsId: 'petclinic-production', keyFileVariable: 'SSH_KEY') {
+        withCredentials(sshUserPrivateKey (credentialsId: 'petclinic-production', keyFileVariable: 'SSH_KEY')) {
           sh 'ssh pi@192.168.178.34 echo hello'
         }
       }
