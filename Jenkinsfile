@@ -70,7 +70,9 @@ pipeline {
       }
     }
     stage('Deploy') {
-      sh 'echo hello'
+      steps {
+        sh 'echo hello'
+      }
     }
   }
 }  
