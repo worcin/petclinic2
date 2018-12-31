@@ -1,5 +1,5 @@
 pipeline {
-  agent none //Keinen Standard-Agent
+  agent any //Standard-Agent
   environment {
     DOCKERHUB_LOGIN = credentials('jenkins-docker-login')
     DOCKERHUB_PASSWORD = credentials('jenkins-docker-password')
@@ -7,8 +7,8 @@ pipeline {
   triggers {
     pollSCM('* * * * *') //Jede Minute auf Änderungen prüfen
   }
-  stages { //Definition der Build-Schritte
-    stage('Build') { //Stage mit namen Build
+  stages { //Definition der Pipeline-Schritte
+    stage('Build') { //Stage mit Namen Build
       agent { //In einem Dockercontainer mit Maven bauen
         docker { 
             image 'maven:3.5-jdk-8'
@@ -25,19 +25,20 @@ pipeline {
       }
     }
     stage('BuildDocker') {
-      agent any
       steps {
+        //petclinic.war wiederherstellen
         unstash name: "warfile"
+        //Login bei Dockerhub
         sh 'docker login -u $DOCKERHUB_LOGIN -p $DOCKERHUB_PASSWORD'
+        //Dockerimage bauen
         sh 'docker build -t $DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER .'
+        //Dockerimage hochladen
         sh 'docker push $DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER'
       }
     }
     stage('AbnahmeTests') {
       parallel {
-
         stage('EndToEnd') {
-          agent any
           steps {
             script {
               docker.image("$DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER").withRun { 
@@ -55,7 +56,6 @@ pipeline {
           }
         }
         stage('LastTest') {
-          agent any
           steps {
             script {
               docker.image("$DOCKERHUB_LOGIN/petclinic:$BUILD_NUMBER").withRun { 
@@ -68,6 +68,9 @@ pipeline {
           }
         }
       }
+    }
+    stage('Deploy') {
+      sh 'echo hello'
     }
   }
 }  
