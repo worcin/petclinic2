@@ -12,6 +12,7 @@ pipeline {
     stage('Deploy') {
       steps { 
         withCredentials(bindings: [sshUserPrivateKey (credentialsId: 'petclinic-production', keyFileVariable: 'SSH_KEY')]) {
+          sh 'cat $SSH_KEY'
           sh 'ssh -o StrictHostKeyChecking=no -i $SSH_KEY pi@192.168.178.34 echo hello'
         }
       }
