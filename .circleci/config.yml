@@ -7,12 +7,16 @@ jobs:
 
    steps: #
      - checkout # Repository auschecken
+     - restore_cache: 
+         keys:
+         - maven-dependencies-{{ checksum "pom.xml" }} # Cache wiederherstellen
+         - maven-dependencies- #Fallback, falls sich die Checksumme geändert hat
      - run: mvn dependency:go-offline #Maven dependencies herunterladen
+     - run: mvn package #Test ausführen
      - save_cache: #Lokales Maven Repository cachen
          paths:
            - ~/.m2
          key: maven-dependencies-{{ checksum "pom.xml" }}
-     - run: mvn package #Test ausführen
      - store_test_results:  #läd die Testergebnisse hoch
           path: petclinic/target/surefire-reports
      - persist_to_workspace:  #Persistiert die Dateien/Verzeichnisse in einem zwischen den Jobs geteilen Workspace
