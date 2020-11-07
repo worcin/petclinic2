@@ -26,7 +26,7 @@ jobs:
            - Dockerfile
 
  build-dockerimage:
-    machine: #Job wird auf einer Linuxmaschine ausgeführt
+    machine: true #Job wird auf einer Linuxmaschine ausgeführt
     steps:
       - attach_workspace: # Den gemeinsamen Workspace mounten
           at: .
