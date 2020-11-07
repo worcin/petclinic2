@@ -27,7 +27,6 @@ jobs:
 
  build-dockerimage:
     machine: #Job wird auf einer Linuxmaschine ausgeführt
-      docker_layer_caching: true 
     steps:
       - attach_workspace: # Den gemeinsamen Workspace mounten
           at: .
