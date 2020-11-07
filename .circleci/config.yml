@@ -7,10 +7,6 @@ jobs:
 
    steps: #
      - checkout # Repository auschecken
-     - restore_cache: 
-         keys:
-         - maven-dependencies-{{ checksum "pom.xml" }} # Cache wiederherstellen
-         - maven-dependencies- #Fallback, falls sich die Checksumme geändert hat
      - run: mvn dependency:go-offline #Maven dependencies herunterladen
      - save_cache: #Lokales Maven Repository cachen
          paths:
